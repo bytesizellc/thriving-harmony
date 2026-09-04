@@ -1,0 +1,21 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+.aws/
+
+# deps / build
+node_modules/
+dist/
+.next/
+coverage/
+*.tsbuildinfo
+
+# os / ide
+.DS_Store
+.idea/
+.vscode/
+*.swp
