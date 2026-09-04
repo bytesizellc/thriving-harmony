@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  CLINICIAN
+}
+
+enum PortingState {
+  NONE
+  PENDING
+  COMPLETED
+}
+
+enum MessageChannel {
+  SMS
+  TEAM
+}
+
+enum MessageStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
+  RECEIVED
+}
+
+enum CallDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum CallDisposition {
+  IVR
+  ANSWERED
+  NO_ANSWER
+  VOICEMAIL
+  FAILED
+}
+
+enum DataType {
+  RECORDING
+  VOICEMAIL
+  SMS
+}
+
+model Organization {
+  id                  String             @id @default(cuid())
+  name                String
+  timezone            String             @default("America/New_York")
+  weeklyHours         Json
+  ivrGreeting         String
+  afterHoursGreeting  String
+  recordingNotice     String
+  baaSignedAt         DateTime?
+  smsEnabled          Boolean            @default(false)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  users               User[]
+  phoneNumbers        PhoneNumber[]
+  calls               Call[]
+  voicemails          Voicemail[]
+  messages            Message[]
+  meetings            Meeting[]
+  chatChannels        ChatChannel[]
+  auditEvents         AuditEvent[]
+  retentionPolicies   RetentionPolicy[]
+}
+
+model User {
+  id                 String         @id @default(cuid())
+  organizationId     String
+  organization       Organization   @relation(fields: [organizationId], references: [id])
+  cognitoSub         String?        @unique
+  email              String         @unique
+  displayName        String
+  role               UserRole
+  extension          String
+  mobileE164         String
+  webrtcSipUsername  String?
+  recordingEnabled   Boolean        @default(true)
+  e911Address        String?
+  ivrDigit           String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  calls              Call[]
+  voicemails         Voicemail[]
+  messages           Message[]
+}
+
+model PhoneNumber {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  e164           String        @unique
+  telnyxId       String?
+  portingState   PortingState  @default(NONE)
+  isPrimary      Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+}
+
+model Call {
+  id             String           @id @default(cuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  userId         String?
+  user           User?            @relation(fields: [userId], references: [id])
+  telnyxCallId   String?          @unique
+  direction      CallDirection
+  fromE164       String
+  toE164         String
+  disposition    CallDisposition
+  recorded       Boolean          @default(false)
+  recordingKey   String?
+  durationSec    Int?
+  startedAt      DateTime         @default(now())
+  endedAt        DateTime?
+  voicemail      Voicemail?
+}
+
+model Voicemail {
+  id             String         @id @default(cuid())
+  organizationId String
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  callId         String         @unique
+  call           Call           @relation(fields: [callId], references: [id])
+  userId         String?
+  user           User?          @relation(fields: [userId], references: [id])
+  fromE164       String
+  audioKey       String
+  durationSec    Int?
+  createdAt      DateTime       @default(now())
+}
+
+model Message {
+  id             String          @id @default(cuid())
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  userId         String?
+  user           User?           @relation(fields: [userId], references: [id])
+  channel        MessageChannel
+  direction      CallDirection
+  fromE164       String
+  toE164         String
+  body           String
+  mediaKey       String?
+  status         MessageStatus
+  telnyxId       String?
+  createdAt      DateTime        @default(now())
+}
+
+model Meeting {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  title          String
+  hostUserId     String
+  chimeMeetingId String?
+  createdAt      DateTime      @default(now())
+}
+
+model ChatChannel {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  name           String
+  createdAt      DateTime      @default(now())
+}
+
+model AuditEvent {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  actorUserId    String?
+  action         String
+  resourceType   String
+  resourceId     String
+  createdAt      DateTime      @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+model RetentionPolicy {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  dataType       DataType
+  retainDays     Int
+  createdAt      DateTime      @default(now())
+
+  @@unique([organizationId, dataType])
+}

@@ -13,6 +13,9 @@ dist/
 .next/
 coverage/
 *.tsbuildinfo
+data/
+apps/web/.next/
+packages/db/src/generated/
 
 # os / ide
 .DS_Store

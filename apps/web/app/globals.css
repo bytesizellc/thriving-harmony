@@ -1,0 +1,84 @@
+:root {
+  --ink: #1c1914;
+  --paper: #f4efe4;
+  --panel: #fffdf8;
+  --line: #d9d0c0;
+  --accent: #2f5d50;
+  --accent-2: #8b3a2f;
+  --muted: #6b6258;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.brand {
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 600;
+}
+nav { display: flex; gap: 16px; flex-wrap: wrap; }
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+nav a.active, nav a:hover { color: var(--accent); }
+
+main { padding: 32px 28px 64px; max-width: 960px; }
+
+h1 { font-size: 2rem; font-weight: 600; margin: 0 0 8px; }
+p.lede { color: var(--muted); margin: 0 0 24px; max-width: 42em; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+input, textarea, select, button {
+  font: inherit;
+  color: var(--ink);
+}
+input, textarea, select {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+}
+button {
+  background: var(--accent);
+  color: #f7f3ea;
+  border: 0;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--muted); }
+.error { color: var(--accent-2); }
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+.stub {
+  border: 1px dashed var(--line);
+  padding: 28px;
+  color: var(--muted);
+}

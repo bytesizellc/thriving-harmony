@@ -3,7 +3,7 @@
 **Date:** 2026-09-04
 **Client:** Thriving Harmony LLC
 **Operator:** Bytesize LLC (build, operate, then hand off)
-**Status:** Approved for spec; awaiting implementation plan
+**Status:** Local MVP scaffolded. Carrier/AWS go-live still gated on BAAs.
 **Repo:** standalone (`thriving-harmony`). Not part of Intry.
 
 ## 1. Problem

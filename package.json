@@ -1,0 +1,16 @@
+{
+  "name": "thriving-harmony",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @harmony/api --filter @harmony/web dev",
+    "test": "pnpm --filter @harmony/routing test",
+    "db:up": "docker compose up -d",
+    "db:migrate": "DATABASE_URL=postgresql://harmony:harmony@localhost:5433/harmony pnpm --filter @harmony/db migrate",
+    "db:seed": "DATABASE_URL=postgresql://harmony:harmony@localhost:5433/harmony pnpm --filter @harmony/db seed",
+    "db:reset": "DATABASE_URL=postgresql://harmony:harmony@localhost:5433/harmony pnpm --filter @harmony/db reset"
+  }
+}

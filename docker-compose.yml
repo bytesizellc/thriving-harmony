@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: harmony
+      POSTGRES_PASSWORD: harmony
+      POSTGRES_DB: harmony
+    ports:
+      - "5433:5432"
+    volumes:
+      - harmony_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U harmony -d harmony"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  harmony_pg:

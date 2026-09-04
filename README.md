@@ -10,12 +10,35 @@ This is a **standalone Bytesize client project**. It is not part of Intry, does 
 - **Launch tenant:** one practice, two users
 - **MVP:** phone + SMS + admin. Video and chat are scoped, not built.
 
-## Status
+## Repo
 
-Design spec is in [`docs/superpowers/specs/2026-09-04-harmony-voice-design.md`](docs/superpowers/specs/2026-09-04-harmony-voice-design.md). Implementation has not started.
+| Path | Role |
+|---|---|
+| `apps/api` | Express webhooks + REST |
+| `apps/web` | Next.js softphone / admin |
+| `packages/db` | Prisma schema |
+| `packages/routing` | Hours + IVR + sim-ring decisions |
+| `infra/terraform` | Dedicated AWS account (skeleton) |
+| `docs/` | Spec, plan, BAA and local runbooks |
 
-## What this is not
+## Run locally
 
-- Not Intry Gate / Intry Core
-- Not a public UCaaS
-- Not Slack, Zoom, or an EHR in v1
+See [`docs/runbooks/local-dev.md`](docs/runbooks/local-dev.md).
+
+```bash
+cp .env.example .env
+pnpm install
+pnpm db:up
+pnpm db:migrate
+pnpm db:seed
+pnpm test
+pnpm dev
+```
+
+Web: http://localhost:3000 · API: http://localhost:4000/health
+
+## Do not
+
+- Put PHI in this stack until the [BAA checklist](docs/runbooks/baa-checklist.md) is done
+- Use the Intry AWS account or Railway/R2/Clerk/Knock
+- Port the Dialpad number before a parallel run on a new DID
